@@ -17,7 +17,7 @@ resource "aws_subnet" "public_subnet_a_1a" {
   }
 }
 # Create a public subnet in VPC A, AZ 2
-resource "aws_subnet" "public_subnet_a_1a" {
+resource "aws_subnet" "public_subnet_a_1b" {
   vpc_id            = aws_vpc.vpc_a.id
   cidr_block        = var.vpc_a_public_subnet_az2
   availability_zone = var.region_a_az2
@@ -26,7 +26,7 @@ resource "aws_subnet" "public_subnet_a_1a" {
   }
 }
 # Create a private subnet in VPC A, AZ 2
-resource "aws_subnet" "private_subnet_a_1a" {
+resource "aws_subnet" "private_subnet_a_1b" {
   vpc_id            = aws_vpc.vpc_a.id
   cidr_block        = var.vpc_a_private_subnet_az2
   availability_zone = var.region_a_az2
@@ -73,13 +73,16 @@ resource "aws_route_table_association" "public_subnet_a_1b" {
   route_table_id = aws_route_table.public_route_table_a.id
 }
 resource "aws_route_table_association" "private_subnet_a_1b" {
-  subnet_id      = aws_subnet.private_subnet_a_1a.id
+  subnet_id      = aws_subnet.private_subnet_a_1b.id
   route_table_id = aws_route_table.private_route_table_a.id
 }
 
 # NAT Gateway
 resource "aws_eip" "nat_eip" {
-  vpc = true
+  domain = "vpc"
+  tags = {
+    Name = "NAT-EIP-A"
+  }
 }
 resource "aws_nat_gateway" "nat_gw_a" {
   allocation_id = aws_eip.nat_eip.id
